@@ -11,6 +11,9 @@
   <body>
     <main>
       <h1>Ahmed Khalf</h1>  
+      {% for post in posts %}
+      <p>{{post.file}}</p>
+      {% endfor %}
     </main>
 	<script src="index.js"></script>
   </body>
