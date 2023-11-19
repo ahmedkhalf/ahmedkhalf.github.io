@@ -5,16 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Ahmed Khalf</title>
+    <link rel="stylesheet" href="https://unpkg.com/simpledotcss/simple.min.css">
     <!-- <link rel="stylesheet" href="./style.css"> -->
     <!-- <link rel="icon" href="./favicon.ico" type="image/x-icon"> -->
+    <style>
+      header p {
+        margin-bottom: 0;
+      }
+
+      header h1 {
+        margin: 0 0 8px 0;
+      }
+
+      header a {
+        color: var(--text) !important;
+        margin-right: 20px;
+      }
+
+      header {
+        margin-bottom: 3rem;
+      }
+
+      a {
+        display: inline;
+      }
+
+      .date-posted {
+        margin: 8px 0 20px 0;
+        font-size: 0.95rem;
+        line-height: 1;
+      }
+
+      sup {
+        vertical-align: top;
+      }
+    </style>
   </head>
   <body>
     <main>
-      <h1>Ahmed Khalf</h1>  
+      <header>
+        <p>Hi there &#x1F44B;, I'm</p>
+        <h1>Ahmed Khalf</h1>
+        <a href="https://www.github.com/ahmedkhalf" target="_blank">GitHub</a>
+        <a href="https://www.linkedin.com/in/ahmed-khalf/" target="_blank">LinkedIn</a>
+      </header>
       {% for post in posts %}
-      <p>{{post.file}}</p>
+        <div>
+          <a href="{{post.href}}.html">{{post.title}}</a>
+          <p class="date-posted">{{post.date_published | date | safe}}</p>
+        </div>
       {% endfor %}
     </main>
-	<script src="index.js"></script>
   </body>
 </html>

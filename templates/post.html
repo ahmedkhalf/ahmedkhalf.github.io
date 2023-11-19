@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ahmed Khalf</title>
+    <link rel="stylesheet" href="https://unpkg.com/simpledotcss/simple.min.css">
+    <!-- <link rel="stylesheet" href="./style.css"> -->
+    <!-- <link rel="icon" href="./favicon.ico" type="image/x-icon"> -->
+    <style>
+      header {
+        display: grid;
+        grid-template-columns: 1fr min(45rem,90%) 1fr;
+        text-align: unset !important;
+        padding: 1.5rem 0 2rem  !important;
+      }
+
+      .header-content {
+        display: block;
+        grid-column: 2;
+      }
+
+      header p {
+        display: inline;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
+
+      sup {
+        vertical-align: top;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-content">
+        <a href="..">&#8592; Home</a>
+        <h1>{{post.title}}</h1>  
+        <p>Published on {{post.date_published | date | safe}}</p>
+      </div>
+    </header>
+    <main>
+      {{post.content | safe}}
+    </main>
+  </body>
+</html>

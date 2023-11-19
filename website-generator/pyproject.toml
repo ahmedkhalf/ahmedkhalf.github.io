@@ -26,7 +26,9 @@ classifiers = [
 ]
 dependencies = [
   "Jinja2~=3.1",
-  "mistune~=3.0"
+  "mistune~=3.0",
+  "python-frontmatter",
+  "watchdog~=3.0"
 ]
 
 [project.urls]
