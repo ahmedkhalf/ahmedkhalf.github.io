@@ -3,7 +3,9 @@
 # SPDX-License-Identifier: MIT
 
 from dataclasses import dataclass
+from datetime import date
 from datetime import datetime
+import os
 from pathlib import Path
 import shutil
 import time
@@ -18,20 +20,20 @@ from watchdog.events import FileSystemEventHandler
 CWD = Path.cwd().resolve()
 TEMPLATE_FOLDER = CWD / "templates"
 POSTS_FOLDER = CWD / "posts"
+PUBLIC_FOLDER = CWD / "public"
 OUT_FOLDER = CWD / "out"
-OUT_POSTS_FOLDER = OUT_FOLDER / "posts"
 
 
 @dataclass
 class Post:
     file: str
     title: str
-    date_published: datetime.date
+    date_published: date
     content: str
     href: str
 
 
-def date_filter(value: datetime.date):
+def date_filter(value: date):
     if value.day == 1:
         return f"{value:%B} {value.day}<sup>st</sup>, {value:%Y}"
     elif value.day == 2:
@@ -60,32 +62,41 @@ def main():
             post_file = str(Path(post_path).relative_to(POSTS_FOLDER).with_suffix('').as_posix())
             post_title = post["title"]
             post_date_pusblished = post["date-published"]
-            post_content = mistune.html(post.content)
+            post_content = str(mistune.html(post.content))
             posts.append(Post(
-                file=post_file,
+                file=f"posts/{post_file}/index.html",
                 title=post_title,
                 date_published=post_date_pusblished,
                 content=post_content,
-                href=f"./posts/{post_file}"
+                href=f"/posts/{post_file}"
             ))
     
     posts.sort(key=lambda post: (post.date_published, post.file), reverse=True)
 
-    # create an output directory if it does not exist
+    # empty the output directory or create it if it does not exist
     if OUT_FOLDER.exists():
-        shutil.rmtree(OUT_FOLDER)
+        for entry in os.scandir(OUT_FOLDER):
+            if entry.is_file():
+                os.remove(entry.path)
+            elif entry.is_dir():
+                shutil.rmtree(entry.path)
+    else:
+        OUT_FOLDER.mkdir()
 
-    OUT_FOLDER.mkdir(exist_ok=True)
-    OUT_POSTS_FOLDER.mkdir(exist_ok=True)
+    # copy public folder to output folder
+    if PUBLIC_FOLDER.exists():
+        shutil.copytree(PUBLIC_FOLDER, OUT_FOLDER, dirs_exist_ok=True)
 
     # render
     main_page = main_template.render(posts=posts)
     with open(OUT_FOLDER / "index.html", "w") as f:
         f.write(main_page)
-    
+
     for post in posts:
         post_page = post_template.render(post=post)
-        with open(OUT_POSTS_FOLDER / f"{post.file}.html", "w") as f:
+        output_file = OUT_FOLDER / f"{post.file}"
+        output_file.resolve().parent.mkdir(parents=True, exist_ok=True)
+        with open(output_file, "w") as f:
             f.write(post_page)
 
 
