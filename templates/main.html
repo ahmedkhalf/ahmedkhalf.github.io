@@ -39,6 +39,16 @@
       sup {
         vertical-align: top;
       }
+
+      footer {
+        border-top: none !important;
+        text-align: left !important;
+        padding-left: 0 !important;
+      }
+
+      footer a {
+        color: var(--text-light) !important;
+      }
     </style>
   </head>
   <body>
@@ -56,5 +66,8 @@
         </div>
       {% endfor %}
     </main>
+    <footer>
+      <p>Commit Hash <a href="https://github.com/ahmedkhalf/ahmedkhalf.github.io" target="_blank">{{commit_hash}}</a></p>
+    </footer>
   </body>
 </html>
