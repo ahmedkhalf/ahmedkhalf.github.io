@@ -1,0 +1,30 @@
+name: Build and Deploy 
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install website-generator dependencies
+        run: |
+          cd website-generator
+          pip install .
+          cd ..
+
+      - name: Build Website
+        run: python website-generator/src/website_generator/ --hash "$(git log --pretty=format:'%h' -n 1)"
+
+      - name: Deploy to GH Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: out
