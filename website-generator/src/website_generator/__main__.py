@@ -94,7 +94,7 @@ def main(commit_hash: str):
         f.write(main_page)
 
     for post in posts:
-        post_page = post_template.render(post=post)
+        post_page = post_template.render(post=post, commit_hash=commit_hash)
         output_file = OUT_FOLDER / f"{post.file}"
         output_file.resolve().parent.mkdir(parents=True, exist_ok=True)
         with open(output_file, "w") as f:

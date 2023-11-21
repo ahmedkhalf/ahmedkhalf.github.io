@@ -30,6 +30,18 @@
       sup {
         vertical-align: top;
       }
+
+      footer {
+        border-top: none !important;
+        text-align: left !important;
+        margin-top: 32px !important;
+        padding-left: 0 !important;
+        padding-bottom: 5rem !important;
+      }
+
+      footer a {
+        color: var(--text-light) !important;
+      }
     </style>
   </head>
   <body>
@@ -43,6 +55,9 @@
     <main>
       {{post.content | safe}}
     </main>
+    <footer>
+      <p>Commit Hash <a href="https://github.com/ahmedkhalf/ahmedkhalf.github.io" target="_blank">{{commit_hash}}</a></p>
+    </footer>
     <script src="//instant.page/5.2.0" type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z"></script>
   </body>
 </html>
