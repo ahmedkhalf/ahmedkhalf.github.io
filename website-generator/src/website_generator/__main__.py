@@ -5,18 +5,14 @@
 import argparse
 from dataclasses import dataclass
 from datetime import date
-from datetime import datetime
 import os
 from pathlib import Path
 import shutil
-import time
 from typing import Optional
 
 import frontmatter
 import mistune
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
 
 
 CWD = Path.cwd().resolve()
@@ -105,45 +101,9 @@ def main(commit_hash: str):
             f.write(page_html)
 
 
-class MyHandler(FileSystemEventHandler):
-    def __init__(self, commit_hash: str) -> None:
-        super().__init__()
-        self.commit_hash = commit_hash
-
-    def on_any_event(self, event):
-        if event.is_directory:
-            return
-        if not event.src_path.endswith(".pyc"):
-            print(f'{datetime.now()} :: {Path(event.src_path).relative_to(CWD)} :: Compiling website..')
-            main(self.commit_hash)
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="website-generator")
-    parser.add_argument('--dev', action="store_true", help="Run continuously and watch for changes")
     parser.add_argument('--hash', type=str, default="na", help="Hash of the commit being built")
     args = parser.parse_args()
 
-    commit_hash = args.hash
-    if args.dev == True:
-        commit_hash = "DevMode"
-
-    main(commit_hash)
-
-    if args.dev == False:
-        exit(0)
-
-    # Watch for changes in the template and post folders
-    event_handler = MyHandler(commit_hash)
-    observer = Observer()
-    observer.schedule(event_handler, str(TEMPLATE_FOLDER), recursive=True)
-    observer.schedule(event_handler, str(PAGES_FOLDER), recursive=True)
-    observer.schedule(event_handler, str(PUBLIC_FOLDER), recursive=True)
-    observer.start()
-
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        observer.stop()
-    observer.join()
+    main(args.hash)
