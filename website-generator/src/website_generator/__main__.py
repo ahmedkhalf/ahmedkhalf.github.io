@@ -134,6 +134,7 @@ if __name__ == "__main__":
     observer = Observer()
     observer.schedule(event_handler, str(TEMPLATE_FOLDER), recursive=True)
     observer.schedule(event_handler, str(POSTS_FOLDER), recursive=True)
+    observer.schedule(event_handler, str(PUBLIC_FOLDER), recursive=True)
     observer.start()
 
     try:

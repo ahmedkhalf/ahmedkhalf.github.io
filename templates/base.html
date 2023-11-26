@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://unpkg.com/simpledotcss/simple.min.css">
+    <link rel="stylesheet" href="/base.css">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    {% block head %}{% endblock %}
+  </head>
+  <body>
+    {% block header %}{% endblock %}
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+    <footer>
+      <div class="right-footer">
+        <p>About Me</p>
+        <p>Projects</p>
+      </div>
+      <p>&copy; 2023 Ahmed Khalf</p>
+      <p>Commit Hash <a href="https://github.com/ahmedkhalf/ahmedkhalf.github.io" target="_blank">{{commit_hash}}</a></p>
+    </footer>
+    <script src="//instant.page/5.2.0" type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z"></script>
+  </body>
+</html>

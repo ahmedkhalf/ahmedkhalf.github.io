@@ -1,76 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Ahmed Khalf</title>
-    <link rel="stylesheet" href="https://unpkg.com/simpledotcss/simple.min.css">
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <!-- <link rel="stylesheet" href="./style.css"> -->
-    <style>
-      header p {
-        margin-bottom: 0;
-      }
+{% extends "base.html" %}
 
-      header h1 {
-        margin: 0 0 8px 0;
-      }
+{% block title %}Ahmed Khalf{% endblock %}
 
-      header a {
-        color: var(--text) !important;
-        margin-right: 20px;
-      }
+{% block head %}
+<style>
+  header p {
+    margin-bottom: 0;
+  }
 
-      header {
-        margin-bottom: 3rem;
-      }
+  header h1 {
+    margin: 0 0 8px 0;
+  }
 
-      a {
-        display: inline;
-      }
+  header a {
+    color: var(--text) !important;
+    margin-right: 20px;
+  }
 
-      .date-posted {
-        margin: 8px 0 20px 0;
-        font-size: 0.95rem;
-        line-height: 1;
-      }
+  header {
+    margin-bottom: 3rem;
+  }
 
-      sup {
-        vertical-align: top;
-      }
+  a {
+    display: inline;
+  }
 
-      footer {
-        border-top: none !important;
-        text-align: left !important;
-        margin-top: 32px !important;
-        padding-left: 0 !important;
-        padding-bottom: 5rem !important;
-      }
+  .date-posted {
+    margin: 8px 0 20px 0;
+    font-size: 0.95rem;
+    line-height: 1;
+  }
+</style>
+{% endblock %}
 
-      footer a {
-        color: var(--text-light) !important;
-      }
-    </style>
-  </head>
-  <body>
-    <main>
-      <header>
-        <p>Hi there &#x1F44B;, I'm</p>
-        <h1>Ahmed Khalf</h1>
-        <a href="https://www.github.com/ahmedkhalf" target="_blank">[GitHub]</a>
-        <a href="https://www.linkedin.com/in/ahmed-khalf/" target="_blank">[LinkedIn]</a>
-      </header>
-      {% for post in posts %}
-        <div>
-          <a href="{{post.href}}">{{post.title}}</a>
-          <p class="date-posted">{{post.date_published | date | safe}}</p>
-        </div>
-      {% endfor %}
-    </main>
-    <footer>
-      <p>Commit Hash <a href="https://github.com/ahmedkhalf/ahmedkhalf.github.io" target="_blank">{{commit_hash}}</a></p>
-    </footer>
-    <script src="//instant.page/5.2.0" type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z"></script>
-  </body>
-</html>
+{% block content %}
+  <header>
+    <p>Hi there &#x1F44B;, I'm</p>
+    <h1>Ahmed Khalf</h1>
+    <a href="https://www.github.com/ahmedkhalf" target="_blank">[GitHub]</a>
+    <a href="https://www.linkedin.com/in/ahmed-khalf/" target="_blank">[LinkedIn]</a>
+  </header>
+  {% for post in posts %}
+    <div>
+      <a href="{{post.href}}">{{post.title}}</a>
+      <p class="date-posted">{{post.date_published | date | safe}}</p>
+    </div>
+  {% endfor %}
+{% endblock %}
