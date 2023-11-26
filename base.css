@@ -1,0 +1,24 @@
+sup {
+  vertical-align: top;
+}
+
+footer {
+  border-top: none !important;
+  text-align: left !important;
+  margin-top: 32px !important;
+  padding-left: 0 !important;
+  padding-bottom: 5rem !important;
+}
+
+footer a {
+  color: var(--text-light) !important;
+}
+
+footer p {
+  margin: 0;
+}
+
+.right-footer {
+  float: right;
+  text-align: right;
+}
