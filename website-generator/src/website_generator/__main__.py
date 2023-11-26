@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 import shutil
 import time
+from typing import Optional
 
 import frontmatter
 import mistune
@@ -20,18 +21,19 @@ from watchdog.events import FileSystemEventHandler
 
 CWD = Path.cwd().resolve()
 TEMPLATE_FOLDER = CWD / "templates"
-POSTS_FOLDER = CWD / "posts"
+PAGES_FOLDER = CWD / "pages"
+POSTS_FOLDER = PAGES_FOLDER / "posts"
 PUBLIC_FOLDER = CWD / "public"
 OUT_FOLDER = CWD / "out"
 
 
 @dataclass
-class Post:
+class Page:
     file: str
     title: str
-    date_published: date
     content: str
     href: str
+    date_published: Optional[date] = None
 
 
 def date_filter(value: date):
@@ -51,28 +53,29 @@ def main(commit_hash: str):
         loader=FileSystemLoader(TEMPLATE_FOLDER),
         autoescape=select_autoescape()
     )
+    env.globals["commit_hash"] = commit_hash
     env.filters["date"] = date_filter
     main_template = env.get_template("main.html")
     post_template = env.get_template("post.html")
 
-    # load posts
-    posts: list[Post] = []
-    for post_path in POSTS_FOLDER.glob("*.md"):
-        with open(post_path) as f:
-            post = frontmatter.load(f)
-            post_file = str(Path(post_path).relative_to(POSTS_FOLDER).with_suffix('').as_posix())
-            post_title = post["title"]
-            post_date_pusblished = post["date-published"]
-            post_content = str(mistune.html(post.content))
-            posts.append(Post(
-                file=f"posts/{post_file}/index.html",
-                title=post_title,
-                date_published=post_date_pusblished,
-                content=post_content,
-                href=f"/posts/{post_file}"
-            ))
-    
-    posts.sort(key=lambda post: (post.date_published, post.file), reverse=True)
+    # load pages
+    pages: list[Page] = []
+    posts: list[Page] = []
+    for page_path in PAGES_FOLDER.rglob("*.md"):
+        with open(page_path) as f:
+            page_file = str(Path(page_path).relative_to(PAGES_FOLDER).with_suffix('').as_posix())
+            page_metadata = frontmatter.load(f)
+            new_page = Page(
+                file=f"{page_file}/index.html",
+                title=page_metadata["title"],
+                date_published=page_metadata.get("date-published"),
+                content=str(mistune.html(page_metadata.content)),
+                href=f"/{page_file}"
+            )
+
+            if Path(page_path).is_relative_to(POSTS_FOLDER):
+                posts.append(new_page)
+            pages.append(new_page)
 
     # empty the output directory or create it if it does not exist
     if OUT_FOLDER.exists():
@@ -89,16 +92,17 @@ def main(commit_hash: str):
         shutil.copytree(PUBLIC_FOLDER, OUT_FOLDER, dirs_exist_ok=True)
 
     # render
-    main_page = main_template.render(posts=posts, commit_hash=commit_hash)
+    posts.sort(key=lambda post: (post.date_published, post.file), reverse=True)
+    main_page = main_template.render(posts=posts)
     with open(OUT_FOLDER / "index.html", "w") as f:
         f.write(main_page)
 
-    for post in posts:
-        post_page = post_template.render(post=post, commit_hash=commit_hash)
-        output_file = OUT_FOLDER / f"{post.file}"
+    for page in pages:
+        page_html = post_template.render(post=page)
+        output_file = OUT_FOLDER / f"{page.file}"
         output_file.resolve().parent.mkdir(parents=True, exist_ok=True)
         with open(output_file, "w") as f:
-            f.write(post_page)
+            f.write(page_html)
 
 
 class MyHandler(FileSystemEventHandler):
@@ -133,7 +137,7 @@ if __name__ == "__main__":
     event_handler = MyHandler(commit_hash)
     observer = Observer()
     observer.schedule(event_handler, str(TEMPLATE_FOLDER), recursive=True)
-    observer.schedule(event_handler, str(POSTS_FOLDER), recursive=True)
+    observer.schedule(event_handler, str(PAGES_FOLDER), recursive=True)
     observer.schedule(event_handler, str(PUBLIC_FOLDER), recursive=True)
     observer.start()
 

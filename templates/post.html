@@ -29,7 +29,9 @@
   <div class="header-content">
     <a href="/">&#8592; Home</a>
     <h1>{{post.title}}</h1>  
+    {% if post.date_published %}
     <p>Published on {{post.date_published | date | safe}}</p>
+    {% endif %}
   </div>
 </header>
 {% endblock %}
