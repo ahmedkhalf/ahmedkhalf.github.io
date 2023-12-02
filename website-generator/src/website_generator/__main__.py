@@ -5,9 +5,11 @@
 import argparse
 from dataclasses import dataclass
 from datetime import date
+import datetime
 import os
 from pathlib import Path
 import shutil
+import time
 from typing import Optional
 
 import frontmatter
@@ -106,4 +108,6 @@ if __name__ == "__main__":
     parser.add_argument('--hash', type=str, default="na", help="Hash of the commit being built")
     args = parser.parse_args()
 
+    start = time.perf_counter()
     main(args.hash)
+    print(f"{datetime.datetime.now()} :: Built in {(time.perf_counter() - start) * 1000:.0f}ms")

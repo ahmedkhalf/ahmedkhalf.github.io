@@ -14,14 +14,8 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Install website-generator dependencies
-        run: |
-          cd website-generator
-          pip install .
-          cd ..
-
-      - name: Build Website
-        run: python website-generator/src/website_generator/ --hash "$(git log --pretty=format:'%h' -n 1)"
+      - name: Install Dependencies and Build Website
+        run: make all
 
       - name: Deploy to GH Pages
         uses: peaceiris/actions-gh-pages@v3
